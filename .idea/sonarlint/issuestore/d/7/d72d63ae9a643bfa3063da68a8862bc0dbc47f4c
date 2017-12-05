@@ -1,0 +1,6 @@
+
+\squid:UselessImportCheck".Remove this unused import 'android.os.Bundle'.(°þÊóøÿÿÿÿ8ŸÖ©ê€,
+gsquid:UselessImportCheck"9Remove this unused import 'android.os.PersistableBundle'.(Ñƒ¨’øÿÿÿÿ8ŸÖ©ê€,
+nsquid:UselessImportCheck"@Remove this unused import 'android.support.annotation.Nullable'.(Ö‹øïüÿÿÿÿ8ŸÖ©ê€,
+jsquid:MaximumInheritanceDepth"<This class has 7 parents which is greater than 5 authorized.(²ÙÜá8ææ»ã€,
+[squid:UselessImportCheck"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8õïÐé€,
