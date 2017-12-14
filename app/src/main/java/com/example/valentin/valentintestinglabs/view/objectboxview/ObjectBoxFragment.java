@@ -5,10 +5,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.widget.TextView;
 
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.example.valentin.valentintestinglabs.Application;
 import com.example.valentin.valentintestinglabs.Application_;
 import com.example.valentin.valentintestinglabs.R;
+import com.example.valentin.valentintestinglabs.manager.InsertJob;
+import com.example.valentin.valentintestinglabs.manager.SelectJob;
 import com.example.valentin.valentintestinglabs.model.Cake;
 import com.example.valentin.valentintestinglabs.model.Chief;
 
@@ -17,6 +22,9 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 import io.objectbox.Box;
 
@@ -34,6 +42,9 @@ public class ObjectBoxFragment extends Fragment implements ObjectBoxContract.Vie
     @ViewById(R.id.cake_recycler_view)
     RecyclerView mRecyclerView;
 
+    @ViewById(R.id.number_item)
+    TextView mNumberItem;
+
     @AfterViews
     public void afterLoad(){
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
@@ -42,19 +53,26 @@ public class ObjectBoxFragment extends Fragment implements ObjectBoxContract.Vie
 
     @Click(R.id.saveNewData)
     void onclick(){
-        Chief chief = new Chief();
-        chief.setChiefName("Glados");
-        Cake cake  = new Cake();
-        cake.setCakeName("This cake is a lie");
-        cake.getChiefName().setTarget(chief);
-        Box<Cake> boxStore = Application_.getInstance().getBoxStore().boxFor(Cake.class);
-        boxStore.put(cake);
+        new JobRequest.Builder(InsertJob.TAG).startNow().build().schedule();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter = new ObjectBoxPresenter(this);
+        EventBus.getDefault().register(mPresenter);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(mPresenter);
     }
 
     @Click(R.id.loadObject)
     void onLoadObjectClick(){
-        Box<Cake> boxStore = Application_.getInstance().getBoxStore().boxFor(Cake.class);
-        mAdapter.setItems(boxStore.getAll());
+        new JobRequest.Builder(SelectJob.TAG).startNow().build().schedule();
     }
 
     @Override
@@ -62,5 +80,11 @@ public class ObjectBoxFragment extends Fragment implements ObjectBoxContract.Vie
         mPresenter = presenter;
     }
 
+
+    @Override
+    public void onDataInserted(ArrayList<Cake> arrayListy) {
+        mAdapter.setItems(arrayListy);
+        mNumberItem.setText("Number of item " + arrayListy.size());
+    }
 
 }

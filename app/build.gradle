@@ -32,4 +32,10 @@ dependencies {
     //android annot
     annotationProcessor "org.androidannotations:androidannotations:4.3.1"
     compile "org.androidannotations:androidannotations-api:4.3.1"
+
+    //Eventbus
+    compile 'org.greenrobot:eventbus:3.1.1'
+
+    //Async task
+    compile 'com.evernote:android-job:1.2.1'
 }
